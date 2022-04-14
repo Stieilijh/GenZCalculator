@@ -1,0 +1,18 @@
+#display{
+    border: 2px solid black;
+    padding: 16px;
+    text-align: center;
+    margin: 16px;
+}
+
+#Button-container{
+    display:grid;
+    grid-template-columns: repeat(4,1fr);
+    gap:5px 10px;
+    margin: 3% 10%;
+}
+
+body{
+    margin: 4% 30%;
+    border: 2px solid black;
+}

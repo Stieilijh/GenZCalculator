@@ -3,6 +3,8 @@
     padding: 16px;
     text-align: center;
     margin: 16px;
+    background-color: aquamarine;
+    color: white;
 }
 
 #Button-container{
@@ -11,8 +13,27 @@
     gap:5px 10px;
     margin: 3% 10%;
 }
-
-body{
+.buttons{
+    background-color: blue;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.buttons:hover{
+    filter: contrast(80%);
+    
+}
+#calc{
+    background-color: lightblue;
     margin: 4% 30%;
     border: 2px solid black;
+}
+#clear{
+    grid-column-start:1 ;
+    grid-column-end:3 ;
+}
+#equal{
+    grid-column-start: 3;
+    grid-column-end:5 ;
 }

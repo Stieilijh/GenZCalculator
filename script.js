@@ -28,10 +28,6 @@ window.onload=function(){
             }
     });
 });
-//checks if given char is operator
-function isOperator(s){
-    return s===""||s==="+"||s==="-"||s==="*"||s==="/";
-}
 
 //clears the screen
     const clearscr = document.querySelector("#clear");
@@ -41,9 +37,28 @@ function isOperator(s){
     backspace.addEventListener("click",()=>{
         displayText.textContent=displayText.textContent.slice(0,-1);
     });
+//point button
+    const point = document.querySelector("#point");
+    point.addEventListener("click",()=>{
+    if(!(displayText.textContent.includes("."))){
+        if(isNumber(displayText.textContent.charAt(
+            displayText.textContent.length-1
+        ))
+        )displayText.textContent+=".";
+    }
+    });    
 
 }
+//checks if the given char is number
+function isNumber(n){
+    return /^\d$/.test(n.toString());
+}
 
+//checks if given char is operator or empty space or a point
+function isOperator(s){
+    return s==="."||s===""||s==="+"||s==="-"||s==="*"||s==="/";
+}
+//clears whole display
 function clearDisplay(){
     const display =document.querySelector("#display");
     display.textContent="";

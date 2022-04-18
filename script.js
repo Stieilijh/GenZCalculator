@@ -1,7 +1,6 @@
 
 window.onload=function(){
     let operator ="";
-    let first,second;
     let displayText = document.querySelector("#display");
     clearDisplay();
     //Buttons action Listner 
@@ -25,30 +24,49 @@ window.onload=function(){
                 displayText.textContent.length-1
             )))){
                 displayText.textContent += btn.id[1];
+                operatorbtns.forEach(btn=>btn.disabled=true);
             }
     });
 });
 
 //clears the screen
     const clearscr = document.querySelector("#clear");
-    clearscr.addEventListener("click",clearDisplay);
+    clearscr.addEventListener("click",()=>{
+        clearDisplay();
+        operatorbtns.forEach(btn=>btn.disabled=false);});
+
 //backspace one character
     const backspace = document.querySelector("#back");
     backspace.addEventListener("click",()=>{
         displayText.textContent=displayText.textContent.slice(0,-1);
     });
-//point button
-    const point = document.querySelector("#point");
-    point.addEventListener("click",()=>{
-    if(!(displayText.textContent.includes("."))){
-        if(isNumber(displayText.textContent.charAt(
-            displayText.textContent.length-1
-        ))
-        )displayText.textContent+=".";
-    }
-    });    
 
+//equal button
+const equalbtn = document.querySelector("#equal");
+equalbtn.addEventListener("click",()=>{
+    let question = displayText.textContent;
+    let answer = equate(question);
+    displayText.textContent=answer;
+    if(answer==69)alert("Nice");
+    operatorbtns.forEach(btn=>btn.disabled=false);
+});
+//point button
+const point = document.querySelector("#point");
+point.addEventListener("click",()=>{
+if(!(displayText.textContent.includes("."))||
+(displayText.textContent.includes("+")||
+displayText.textContent.includes("-")||
+displayText.textContent.includes("*")||
+displayText.textContent.includes("/"))){
+    if(isNumber(displayText.textContent.charAt(
+        displayText.textContent.length-1
+    ))&&dotcount(displayText.textContent)<2
+    )displayText.textContent+=".";
 }
+}); 
+}    
+
+
 //checks if the given char is number
 function isNumber(n){
     return /^\d$/.test(n.toString());
@@ -64,32 +82,51 @@ function clearDisplay(){
     display.textContent="";
 }
 
-function add(a,b){
-    return a+b;
+// equates a question
+function equate(qn){
+    let qnArr = qn.split("");
+    let operator , numbers;
+    for(let i=0;i<qnArr.length;i++){
+        if(!(isNumber(qnArr[i])||qnArr[i]==".")){
+            operator=qnArr[i];
+        }
+    }
+    numbers = qn.split(""+operator);
+    return operate(operator,...numbers);
 }
-function sub(a,b){
-    return a-b;
-}
-function mul(a,b){
-    return a*b;
-}
-function div(a,b){
-    return a/b;
-}
+//rounds off to 6 digits
 function roundOff(num){
-    return Math.round(num);
+    return Math.round(num*1000000)/1000000;
 }
+//takess operator and 2 numbers and returns the answer
 function operate(operator,a,b){
+    let anum=parseFloat(a);
+    let bnum=parseFloat(b);
     switch(operator){
         case "+":
-            return add(a,b);
+            if(!bnum)return anum;
+            return anum+bnum;
         case "-":
-            return sub(a,b);   
+            if(!bnum)return anum;
+            return anum-bnum;   
         case "*":
-            return mul(a,b); 
+            if(!bnum)return anum;
+            return roundOff(anum*bnum); 
         case "/":
-            return div(a,b);        
+            if(bnum==0){alert("Bruh");clearDisplay();return ;}
+            if(!bnum)return anum;
+            return roundOff(anum/bnum);        
         default:
+            if(anum)return anum;
             break;
     }
+}
+//dotcount
+function dotcount(s){
+    let arr=s.split("");
+    let count=0;
+    for(let i=0;i<arr.length;i++){
+        if(arr[i]===".")count++;
+    }
+    return count;
 }

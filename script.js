@@ -1,11 +1,10 @@
 //main function
 window.onload=function(){
-    let operator ="";
     let displayText = document.querySelector("#display");
     clearDisplay();
-    //Buttons action Listner 
+//Buttons action Listner 
     const buttons = Array.from(document.querySelectorAll(".buttons"));
-    //numbers
+//numbers
     const numberbtns = buttons.filter((button)=>{
     return button.id[0]==="n";
     });
@@ -14,7 +13,7 @@ window.onload=function(){
             displayText.textContent += btn.id[1];
     });
 });
-    //operators
+//operators
     const operatorbtns = buttons.filter((button)=>{
         return button.id[0]==="o";
     });
@@ -143,15 +142,6 @@ function operate(operator,a,b){
             if(anum)return anum;
             break;
     }
-}
-//dotcount
-function dotcount(s){
-    let arr=s.split("");
-    let count=0;
-    for(let i=0;i<arr.length;i++){
-        if(arr[i]===".")count++;
-    }
-    return count;
 }
 //if string contains an operator
 function hasOperator(s){

@@ -1,4 +1,4 @@
-
+//main function
 window.onload=function(){
     let operator ="";
     let displayText = document.querySelector("#display");
@@ -39,33 +39,56 @@ window.onload=function(){
     const backspace = document.querySelector("#back");
     backspace.addEventListener("click",()=>{
         displayText.textContent=displayText.textContent.slice(0,-1);
+        if(!hasOperator(displayText.textContent))
+        operatorbtns.forEach(btn=>btn.disabled=false);
     });
 
 //equal button
 const equalbtn = document.querySelector("#equal");
 equalbtn.addEventListener("click",()=>{
-    let question = displayText.textContent;
-    let answer = equate(question);
-    displayText.textContent=answer;
-    if(answer==69)alert("Nice");
-    operatorbtns.forEach(btn=>btn.disabled=false);
+    doTheCalculations();
 });
+//answer function
+function doTheCalculations(){
+    displayText.textContent=equate(displayText.textContent);
+    if(equate(displayText.textContent)==69)alert("Nice");
+    operatorbtns.forEach(btn=>btn.disabled=false);
+}
 //point button
 const point = document.querySelector("#point");
 point.addEventListener("click",()=>{
-if(!(displayText.textContent.includes("."))||
-(displayText.textContent.includes("+")||
-displayText.textContent.includes("-")||
-displayText.textContent.includes("*")||
-displayText.textContent.includes("/"))){
-    if(isNumber(displayText.textContent.charAt(
-        displayText.textContent.length-1
-    ))&&dotcount(displayText.textContent)<2
-    )displayText.textContent+=".";
-}
+    decideWhetherToAddPoint();
 }); 
-}    
 
+//point function 
+function decideWhetherToAddPoint(){
+    if(!(displayText.textContent.includes("."))){
+        if(isNumber(displayText.textContent.charAt(
+            displayText.textContent.length-1
+        )))displayText.textContent+=".";
+}else if(hasOperator(displayText.textContent)){
+    let op = whichOperator(displayText.textContent); 
+    let index = displayText.textContent.indexOf(op+"");
+    let secondNum = displayText.textContent.slice(
+        index+1,displayText.textContent.length);
+        if(!(secondNum.includes("."))&&
+        isNumber(displayText.textContent.charAt(
+            displayText.textContent.length-1
+        )))
+        displayText.textContent+=".";
+}
+}
+//keyboard buttons
+document.addEventListener("keydown",(event)=>{
+    if((isNumber(event.key)||isOperator(event.key))&&(event.key!=="."))
+        displayText.textContent+=event.key;
+    else if(event.key==="Backspace")
+        displayText.textContent=displayText.textContent.slice(0,-1);
+    else if(event.key===".")decideWhetherToAddPoint();
+    else if(event.key==="="||"Enter")doTheCalculations();
+});
+}    
+//Helpful functions
 
 //checks if the given char is number
 function isNumber(n){
@@ -96,7 +119,7 @@ function equate(qn){
 }
 //rounds off to 6 digits
 function roundOff(num){
-    return Math.round(num*1000000)/1000000;
+    return parseFloat(Number(num).toFixed(6));
 }
 //takess operator and 2 numbers and returns the answer
 function operate(operator,a,b){
@@ -105,10 +128,10 @@ function operate(operator,a,b){
     switch(operator){
         case "+":
             if(!bnum)return anum;
-            return anum+bnum;
+            return roundOff(anum+bnum);
         case "-":
             if(!bnum)return anum;
-            return anum-bnum;   
+            return roundOff(anum-bnum);   
         case "*":
             if(!bnum)return anum;
             return roundOff(anum*bnum); 
@@ -129,4 +152,22 @@ function dotcount(s){
         if(arr[i]===".")count++;
     }
     return count;
+}
+//if string contains an operator
+function hasOperator(s){
+    for(let i=0;i<s.length;i++){
+        if(isOperator(s[i])&&s[i]!="."){
+            return true;
+        }
+    }
+    return false;
+}
+//which operator does it have
+function whichOperator(s){
+    for(let i=0;i<s.length;i++){
+        if(isOperator(s[i])&&s[i]!="."){
+            return s[i];
+        }
+    }
+    return "";
 }

@@ -6,6 +6,7 @@
     background-color: lightseagreen;
     color: white;
     font-weight: bold;
+    overflow-wrap: break-word;
 }
 
 #Button-container{
